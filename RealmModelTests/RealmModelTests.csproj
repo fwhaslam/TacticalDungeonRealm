@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net4.7.1</TargetFramework>
+    <ProjectName>RealmModelTests</ProjectName>
+    <Version>0.0.4</Version>
+    <Company>FredHaslam</Company>
+    <Product>FredHaslam</Product>
+    <!--<AssemblyName>$(ProjectName)_$(Version)</AssemblyName>-->
   </PropertyGroup>
   
   <ItemGroup>
