@@ -21,8 +21,7 @@ namespace Realm {
 
 			int doorCount=0,chestCount=0;
 
-			var loop = map.GetPlaceLoop();
-			foreach ( var spot in loop ) {
+			foreach ( var spot in map.Places ) {
 
 				if (spot.Flag==FlagEnum.Door) doorCount++;
 				if (spot.Flag==FlagEnum.Chest) chestCount++;

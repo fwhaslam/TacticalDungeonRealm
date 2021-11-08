@@ -41,6 +41,8 @@ namespace Utility {
 
 		static internal string CompareStringLines( string[] expect, string[] actual ) {
 
+			DumpToConsole(actual);
+
 			int min = Math.Min(expect.Length,actual.Length);
 			int max = Math.Max(expect.Length,actual.Length);
 
@@ -55,6 +57,17 @@ namespace Utility {
 				return "Strings do not match at line["+min+"]\nOne space is larger than the other";
 
 			return null;
+		}
+
+		static internal void DumpToConsole(string[] actual) {
+
+			var buf = new StringBuilder();
+
+			buf.Append( "[[\"" );
+			buf.Append( String.Join( "\\n\"+\n\t\t\"", actual ) );
+			buf.Append( "\"]]" );
+
+			Console.Out.WriteLine( buf.ToString() );
 		}
 
 	}

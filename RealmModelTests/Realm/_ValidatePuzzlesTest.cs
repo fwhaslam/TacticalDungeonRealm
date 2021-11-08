@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962 in the USA
+//
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 using System.Collections.Generic;

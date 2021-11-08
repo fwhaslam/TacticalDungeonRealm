@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962 in the USA
+//
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 using System.Collections.Generic;
@@ -34,9 +38,9 @@ namespace Realm {
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
+				"- 1.__/1.__/1.00/P.__/P.__/1.__/1.__/1.__\n" +
+				"- 1.__/1.__/1.__/P.__/P.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
-				"- 1.__/1.__/1.__/1.00/P.__/P.__/1.__/1.__\n" +
-				"- 1.__/1.__/1.__/1.__/P.__/P.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"Text:\n" + 
@@ -45,7 +49,7 @@ namespace Realm {
 		[TestMethod]
 		public void DumpLevelMap( ) {
 
-			PuzzleMap map = RealmFactory.SimpleTerrain(8,8);
+			PuzzleMap map = PuzzleMapFactory.SimpleTerrain(8,8);
 
 			// invocation
 			string result = RealmManager.DumpLevelMap( map );
@@ -70,7 +74,7 @@ Console.Out.WriteLine( "MAP>>"+RealmManager.DumpLevelMap( result ) );
 			AreEqual( 8, result.Tall );
 
 			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToString() );
-			AreEqual( "Peasant", result.Places[3,4].Agent.Name );
+			AreEqual( "Peasant", result.Places[2,3].Agent.Name );
 		}
 	}
 }

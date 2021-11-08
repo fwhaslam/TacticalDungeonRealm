@@ -2,7 +2,6 @@
 //	Copyright 2021 Frederick William Haslam born 1962 in the USA
 //
 
-
 namespace Realm {
 
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +21,7 @@ namespace Realm {
 		[TestMethod]
 		public void Validate() {
 
-			var map = RealmFactory.SimpleTerrain( 10, 10 );
+			var map = PuzzleMapFactory.SimpleTerrain( 10, 10 );
 			AreEqual( "No doors for map entry", RealmAnalyzer.Validate(map) );
 
 			// add door

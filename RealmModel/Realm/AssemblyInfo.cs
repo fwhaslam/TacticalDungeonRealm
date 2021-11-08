@@ -6,6 +6,6 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("RealmTests")]
+[assembly:InternalsVisibleTo("RealmModelTests")]
 class AssemblyInfo {}
 
