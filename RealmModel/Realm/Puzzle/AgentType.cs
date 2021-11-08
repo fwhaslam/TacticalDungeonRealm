@@ -134,7 +134,7 @@ namespace Realm.Puzzle {
 			}
 		}
 
-		//======================================================================================================================
+//======================================================================================================================
 
 		/// <summary>
 		/// Is this agent afraid of that agent?
@@ -157,6 +157,18 @@ namespace Realm.Puzzle {
 
 			return false;
 
+		}
+
+		/// <summary>
+		/// How many leves up/down can the agent cross?
+		/// </summary>
+		/// <returns></returns>
+		public int Climb {
+			get {
+				if (Has(FLY)) return 5;
+				if (Has(TALL)) return 2;
+				return 1;
+			}
 		}
 
 	}
