@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net4.7.1</TargetFramework>
     <ProjectName>RealmModel</ProjectName>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <Company>FredHaslam</Company>
     <Product>FredHaslam</Product>
     <!--<AssemblyName>$(ProjectName)_$(Version)</AssemblyName>-->
