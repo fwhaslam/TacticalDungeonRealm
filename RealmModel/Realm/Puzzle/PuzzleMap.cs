@@ -42,23 +42,20 @@ namespace Realm.Puzzle {
 			work.Wide = w;
 			work.Tall = t;
 
-			work.Places = Create2DArray<Place>(CreatePlace, w, t);
+			work.Places = FillGrid( new Grid<Place>( w, t ) );
 
 			work.Agents = new List<Agent>();
 
 			return work;
 		}
 
-		static internal Place CreatePlace(int col, int row, Place src) {
-			return new Place(col, row);
-		}
-
-		/// <summary>
-		/// Iterator through places as a linear collection.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerable<Place> GetPlaceLoop() {
-			return new PlaceLoop(this);
+		static internal Grid<Place> FillGrid( Grid<Place> grid ) {
+			for (int dt=0;dt<grid.Tall;dt++) {
+				for (int dw=0;dw<grid.Wide;dw++) {
+					grid[dw,dt] = new Place( dw, dt );
+				}
+			}
+			return grid;
 		}
 
 //======================================================================================================================
@@ -67,9 +64,9 @@ namespace Realm.Puzzle {
 
 		public string Image { get; set; }
 
-		public int Wide { get; internal set; }
+		public int Wide { get; set; }
 
-		public int Tall { get; internal set; }
+		public int Tall { get; set; }
 
 		public List<Agent> Agents { get; internal set; }
 
@@ -77,13 +74,13 @@ namespace Realm.Puzzle {
 		/// Places become 'Map' for Yaml storage.
 		/// </summary>
 		[YamlIgnore]
-		public Place[,] Places { get; internal set; }
+		public Grid<Place> Places { get; internal set; }
 
 		public List<string> Map { get => MapAsStrings(); set => StringsAsMap(value); }
 
 		public Dictionary<string, string> Text { get => textMap; set => textMap = value; }
 
-		//======================================================================================================================
+//======================================================================================================================
 
 		/// <summary>
 		/// Create an agent on the map, removing any in the way.
@@ -117,121 +114,8 @@ namespace Realm.Puzzle {
 			Places[x, y].Flag = FlagEnum.None;
 		}
 
-		public void AddRow(DirEnum dir) {
 
-			Tuple<int, int> delta = DirEnumTraits.Delta(dir);
-			if (delta.Item1 * delta.Item2 != 0) throw new ArgumentException("Can only use orthogonal directions to add a row");
-
-			// old wide/tall
-			int ow = Wide, ot = Tall;
-			// new wide/tall
-			int nw = ow, nt = ot;
-			// shift in copy
-			int sw = 0, st = 0;
-
-			switch (dir) {
-				case DirEnum.North:  // tall top
-					nt++;
-					break;
-				case DirEnum.South:  // tall zero
-					nt++;
-					st = 1;
-					break;
-				case DirEnum.East:  // wide top
-					nw++;
-					break;
-				case DirEnum.West:  // wide zero
-					nw++;
-					sw = 1;
-					break;
-				default:
-					throw new ArgumentException("Can only use orthogonal directions to add a row");
-			}
-
-			// copy old values into new layers
-			PuzzleMap temp = Allocate(nw, nt);
-			for (int wx = 0; wx < ow; wx++) {
-				for (int tx = 0; tx < ot; tx++) {
-					if (wx + sw < Wide || tx + st < Tall) {
-						temp.Places[wx + sw, tx + st] = Places[wx, tx];
-					}
-				}
-			}
-
-			// shift some agents
-			foreach (var who in Agents.ToList()) {
-				who.Where.X += sw;
-				who.Where.Y += st;
-				//Console.Out.WriteLine("AGENT AT ="+who.Where );
-			}
-
-			// copy over
-			Wide = nw;
-			Tall = nt;
-			Places = temp.Places;
-		}
-
-		public void DropRow(DirEnum dir) {
-
-			Tuple<int, int> delta = DirEnumTraits.Delta(dir);
-			if (delta.Item1 * delta.Item2 != 0) throw new ArgumentException("Can only use orthogonal directions to add a row");
-
-			// old wide/tall
-			int ow = Wide, ot = Tall;
-			// new wide/tall
-			int nw = ow, nt = ot;
-			// shift in copy
-			int sw = 0, st = 0;
-
-			switch (dir) {
-				case DirEnum.North:  // tall top
-					nt--;
-					break;
-				case DirEnum.South:  // tall zero
-					nt--;
-					st = -1;
-					break;
-				case DirEnum.East:  // wide top
-					nw--;
-					break;
-				case DirEnum.West:  // wide zero
-					nw--;
-					sw = -1;
-					break;
-				default:
-					throw new ArgumentException("Can only use orthogonal directions to cut a row");
-			}
-
-			// copy old Places into new Places
-			PuzzleMap temp = Allocate(nw, nt);
-			//Console.Out.WriteLine("   sw="+sw+"  st="+st );
-			for (int wx = 0; wx < nw; wx++) {
-				for (int tx = 0; tx < nt; tx++) {
-					if (wx - sw >= 0 && tx - st >= 0) {
-						temp.Places[wx, tx] = Places[wx - sw, tx - st];
-					}
-				}
-			}
-
-			// remove dropped agents
-			foreach (var who in Agents.ToList()) {
-				who.Where.X += sw;
-				who.Where.Y += st;
-				//Console.Out.WriteLine("AGENT AT ="+who.Where );
-				// new spot is out of bounds
-				if (who.Where.X >= nw || who.Where.Y >= nt || who.Where.X < 0 || who.Where.Y < 0) {
-					Agents.Remove(who);
-				}
-			}
-
-			// copy over
-			Wide = nw;
-			Tall = nt;
-			Places = temp.Places;
-
-		}
-
-		//======================================================================================================================
+//======================================================================================================================
 
 		// format: HeightChar, FlagChar, AgentID(##)
 		//static readonly string PART_FORMAT = "%c%c%02d";
@@ -243,7 +127,7 @@ namespace Realm.Puzzle {
 		static readonly string NO_AGENT_SYMBOL = "__";
 		static readonly string AGENT_ID_FORMAT = "00";
 
-		//======================================================================================================================
+//======================================================================================================================
 
 		/// <summary>
 		/// String representation of the map.
@@ -280,9 +164,8 @@ namespace Realm.Puzzle {
 		/// </summary>
 		/// <param name="source"></param>
 		public void StringsAsMap(List<string> source) {
-
-			// prepare the tiles
-			Places = Create2DArray<Place>(CreatePlace, Wide, Tall);
+			
+			Places = FillGrid( new Grid<Place>( Wide, Tall ) );
 
 			for (int row = 0; row < Tall; row++) {
 
@@ -301,7 +184,7 @@ namespace Realm.Puzzle {
 					string symbol = "" + part[2] + part[3];
 					if (!symbol.Equals(NO_AGENT_SYMBOL)) {
 
-						int agentId = 0;
+						int agentId;
 						try { agentId = int.Parse(symbol); }
 						catch (FormatException ex) { throw new FormatException("Invalid agent symbol [" + symbol + "] at [" + col + "/" + row + "]", ex); }
 
