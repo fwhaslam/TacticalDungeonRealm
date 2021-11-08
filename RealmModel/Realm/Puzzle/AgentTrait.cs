@@ -60,7 +60,7 @@ namespace Realm.Puzzle {
 		static public readonly AgentTrait HOVER =
 			new AgentTrait("Hover", "Can cross pits.  Cannot trigger switches.");
 
-		static public readonly AgentTrait Fly =
+		static public readonly AgentTrait FLY =
 			new AgentTrait("Fly", "Can climb all steps at once, and move over enemies.");
 
 
