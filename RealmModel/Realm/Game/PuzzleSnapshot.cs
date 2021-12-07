@@ -9,14 +9,14 @@ namespace Realm.Game {
 	using System.Text;
 	using System.Threading.Tasks;
 
-	public class PuzzleState {
+	public class PuzzleSnapshot {
 
-		public PuzzleState() { }
+		public PuzzleSnapshot() { }
 
-		public PuzzleState( PuzzleMap map ) { Puzzle = map; }
+		public PuzzleSnapshot( PuzzleMap map ) { Puzzle = map; }
 
 
-		public PuzzleState( ActionChain action, PuzzleMap map ) { 
+		public PuzzleSnapshot( ActionChain action, PuzzleMap map ) { 
 			this.Action = action;
 			this.Puzzle = map; 
 		}

@@ -17,8 +17,9 @@ namespace Realm.Enums {
 	/// </summary>
 	public enum StatusEnum {
 
-		Active,		// will act against all visible enemies
-		Alert,		// unit is waiting, but will become active if it spots nearby foes
+		Active,		// will move and attack visible foes
+		Blocking,	// agent is currently defending
+		Alert,		// [Default] unit is waiting, but will become active if it spots nearby foes
 		Stunned,	// unit is unable to move for one turn, then becomes Alert
 		Sleep		// unit is waiting, will become active if struck or foe moves adjacent
 	}

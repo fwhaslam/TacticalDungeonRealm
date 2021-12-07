@@ -29,8 +29,20 @@ namespace Realm.Puzzle {
 			Faction = src.Faction;
 		}
 
+		public string ToDisplay() {
+			return "Agent[type="+Name+",face="+Face+","+Where+",status="+Status+",faction="+Faction+"]";
+		}
+
 		/// <summary>
-		/// Type is summarized to AgentType.Name
+		/// The identifier is the agents index in the list of Agents.
+		/// This is set when the Agents list if built, so is not stored to YAML.
+		/// </summary>
+		[YamlIgnore]
+		public int Ident {  get; set; }
+
+		/// <summary>
+		/// Type is summarized to AgentType.Name.
+		/// The full Type is not stored to YAML.
 		/// </summary>
 		[YamlIgnore]
 		public AgentType Type { get; set; } = AgentType.PEASANT;
@@ -48,5 +60,24 @@ namespace Realm.Puzzle {
 		public StatusEnum Status { get; set; } = StatusEnum.Alert;
 
 		public int Faction { get; set; } = 0;
+
+//======================================================================================================================
+
+		public bool IsFoe( Agent who ) {
+			return who.Faction != Faction;
+		}
+
+		public bool IsAlly( Agent who ) {
+			return who.Faction == Faction;
+		}
+
+		public int DamageTo( Agent defender, int adds ) {
+
+			if (defender.Status==StatusEnum.Blocking) adds--;
+
+			return Type.DamageTo( defender.Type, adds ) ;
+		}
+
+		public bool IsActive() { return Status==StatusEnum.Active; }
 	}
 }

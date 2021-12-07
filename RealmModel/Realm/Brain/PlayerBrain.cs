@@ -13,7 +13,7 @@ namespace Realm.Brain {
 	/// Wrapper for player taking turns for the player faction.
 	/// This will 'wait' for player action events, then pass them up.
 	/// hmmm .... not sure this is a good way to handle it ...
-	public class PlayerBrain : BrainIF {
+	public class PlayerBrain : BrainIf {
 		
 		/// <summary>
 		/// A brain will select actions based on a map and agent.
@@ -21,7 +21,7 @@ namespace Realm.Brain {
 		/// <param name="who"></param>
 		/// <param name="puzzle"></param>
 		/// <returns></returns>
-		public ActionChain Next( int faction, PuzzleMap puzzle ) {
+		public ActionChain ChooseAction( PuzzleMap puzzle, Agent actor ) {
 			return null;
 		}
 	}

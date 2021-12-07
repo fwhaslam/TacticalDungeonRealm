@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Realm.Tools;
+using System.Diagnostics;
 
 namespace Realm.Game {
 	
@@ -17,10 +18,22 @@ namespace Realm.Game {
 	/// </summary>
 	public class Action {
 
-		// what change is taking place
-		public ActionType Type {  get; set; }
+		public Action ( ActionTypeEnum _type ) {
+			this.Type = _type;
+		}
 
-		// where the action takes effect, usually an adjacent space, sometimes same place, sometimes a distant place
-		public Where Look { get; set; }
+		public ActionTypeEnum Type { get; internal set; }
+
+		/// <summary>
+		/// Used with 'Attack' actions.  AgentId of the target.
+		/// </summary>
+		public int? Target { get; set; }
+
+		/// <summary>
+		/// Used with 'Attack' actions.  Damage inflicted ( after armor et al. )
+		/// </summary>
+		public int? Damage { get; set; }
+
 	}
+
 }

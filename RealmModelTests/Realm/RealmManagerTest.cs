@@ -18,12 +18,19 @@ namespace Realm {
 
 	using Realm.Puzzle;
 
+	using Verbose.Utility;
+
 	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-	using static Utility.AssertStringLinesUtility;
+	using static Verbose.Utility.GenericCollectionAsserts;
 
 
 	[TestClass]
 	public class RealmManagerTest {
+
+		static readonly string MIN_LEVEL = "Wide: 1\n"+
+					"Tall: 1\n"+
+					"Map:\n"+
+					"- 1.__";
 
 		static readonly string CHECK_LEVEL = "Title: Empty Map\n" +
 				"Image: pic1.png\n"+
@@ -57,7 +64,7 @@ namespace Realm {
 			// assertions
 			result = result.Replace( "\r", "" );
 
-			StringLinesAreEqual( CHECK_LEVEL, result );
+			VerboseAsserts.StringsAreEqual( CHECK_LEVEL, result );
 		}
 
 		[TestMethod]
@@ -76,5 +83,41 @@ Console.Out.WriteLine( "MAP>>"+RealmManager.DumpLevelMap( result ) );
 			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToString() );
 			AreEqual( "Peasant", result.Places[2,3].Agent.Name );
 		}
+
+		[TestMethod]
+		public void ParseLevelMap_withStopAtEnd( ) {
+
+			var check = CHECK_LEVEL +"...\n";
+
+			// invocation
+			PuzzleMap result = RealmManager.ParseLevelMap( check );
+
+			// assertions
+			AreEqual( "Empty Map", result.Title );
+			AreEqual( 8, result.Wide );
+			AreEqual( 8, result.Tall );
+
+			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToString() );
+			AreEqual( "Peasant", result.Places[2,3].Agent.Name );
+		}
+
+		
+		[TestMethod]
+		public void ParseLevelMap_minInfo( ) {
+
+			// invocation
+			PuzzleMap result = RealmManager.ParseLevelMap( MIN_LEVEL );
+
+Console.Out.WriteLine( "MAP>>"+RealmManager.DumpLevelMap( result ) );
+
+			// assertions
+			IsNull( result.Title );
+			IsNull( result.Image );
+			AreEqual( 1, result.Wide );
+			AreEqual( 1, result.Tall );
+			IsEmpty( result.Agents );
+			IsEmpty( result.Text );
+		}
+
 	}
 }

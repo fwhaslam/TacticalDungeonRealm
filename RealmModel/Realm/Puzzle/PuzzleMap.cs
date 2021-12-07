@@ -84,24 +84,55 @@ namespace Realm.Puzzle {
 
 		/// <summary>
 		/// Create an agent on the map, removing any in the way.
+		/// Faction=0, Status=Alert
 		/// </summary>
-		public void AddAgent(AgentType type, Where loc, DirEnum face) {
-
-			Place place = Places[loc.X, loc.Y];
-			if (place.Agent != null) {
-				DropAgent(place.Agent);
-			}
-
-			place.Agent = new Agent(loc);
-			place.Agent.Type = type;
-			place.Agent.Face = face;
-
-			Agents.Add(place.Agent);
+		public Agent AddAgent(AgentType type, Where loc, DirEnum face) {
+			return AddAgent( type, loc, face, 0, StatusEnum.Alert );
 		}
 
+		/// <summary>
+		/// Create an agent on the map, removing any in the way.
+		/// </summary>
+		public Agent AddAgent(AgentType type, Where loc, DirEnum face, int faction, StatusEnum status) {
+
+
+			// agent instance
+			Agent who = new Agent(loc);
+			who.Type = type;
+			who.Face = face;
+			who.Faction = faction;
+			who.Status = status;
+
+			// may need to displace another agent, set in spot
+			Place spot = Places[loc.X, loc.Y];
+			if (spot.Agent != null) {
+				DropAgent(spot.Agent);
+			}
+			spot.Agent = who;
+
+			// location in list
+			var agentId = Agents.IndexOf(null);
+			if (agentId<0) {
+				agentId = Agents.Count;
+				Agents.Add(who);
+			}
+			else {
+				Agents[agentId] = who;
+			}
+			who.Ident = agentId;
+
+			// what have we wrought
+			return who;
+		}
+
+		/// <summary>
+		/// Agents use their position in the list as an Identifier.
+		/// So we cannot reduce the list, just replace agents with nulls.
+		/// </summary>
+		/// <param name="who"></param>
 		public void DropAgent(Agent who) {
 			if (who != null) {
-				Agents.Remove(who);
+				Agents[who.Ident] = null;
 				Places[who.Where.X, who.Where.Y] = null;
 			}
 		}
@@ -113,7 +144,6 @@ namespace Realm.Puzzle {
 		public void DropFlag(int x, int y) {
 			Places[x, y].Flag = FlagEnum.None;
 		}
-
 
 //======================================================================================================================
 
@@ -164,7 +194,14 @@ namespace Realm.Puzzle {
 		/// </summary>
 		/// <param name="source"></param>
 		public void StringsAsMap(List<string> source) {
-			
+
+			// fix agent.Ident field
+			if (Agents==null) Agents = new List<Agent>();
+			for (int id=0;id<Agents.Count;id++) {
+				if (Agents[id]!=null) Agents[id].Ident = id;
+			}
+
+			// craete and parse grid
 			Places = FillGrid( new Grid<Place>( Wide, Tall ) );
 
 			for (int row = 0; row < Tall; row++) {

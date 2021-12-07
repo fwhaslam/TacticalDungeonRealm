@@ -50,5 +50,16 @@ namespace Realm.Puzzle {
 			AreEqual("Frail\nWeak", display );
 
 		}
+
+		
+		public void DamageTo() {
+			
+			var who1 = AgentType.PEASANT;
+			var who2 = AgentType.GOBLIN;
+
+			AreEqual( 1, who1.DamageTo( who2, 0 ) );
+			AreEqual( 0, who1.DamageTo( who2, -1 ) );
+			AreEqual( 0, who1.DamageTo( who2, -2 ) );
+		}
 	}
 }

@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Realm.Brain {
 
-	public interface BrainIF {
+	public interface BrainIf {
 
 		/// <summary>
-		/// A brain will select actions based on a map and faction.
+		/// Select an action for the actor.
 		/// </summary>
-		/// <param name="who"></param>
-		/// <param name="puzzle"></param>
+		/// <param name="map"></param>
+		/// <param name="actor"></param>
 		/// <returns></returns>
-		ActionChain Next( int faction, PuzzleMap puzzle );
+		ActionChain ChooseAction( PuzzleMap map, Agent actor );
 	}
 
 }

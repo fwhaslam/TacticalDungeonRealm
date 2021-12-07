@@ -2,7 +2,6 @@
 //	Copyright 2021 Frederick William Haslam born 1962
 //
 
-
 using System;
 
 namespace Realm.Tools {

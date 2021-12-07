@@ -7,6 +7,7 @@ namespace Realm {
 	using System;
 
 	using Realm.Enums;
+	using Realm.Game;
 	using Realm.Puzzle;
 	using Realm.Tools;
 
@@ -104,7 +105,7 @@ namespace Realm {
 
 		static public PuzzleMap AddRow(PuzzleMap work, DirEnum dir) {
 
-			DirEnumTrait trait = DirEnumTraits.Trait(dir);
+			DirEnumTrait trait = DirEnumTraits.Trait((int)dir);
 			if ( !trait.Orth ) throw new ArgumentException("Can only use orthogonal directions to add a row");
 
 			// old wide/tall
@@ -161,7 +162,7 @@ namespace Realm {
 
 		static public PuzzleMap DropRow(PuzzleMap work, DirEnum dir) {
 
-			DirEnumTrait trait = DirEnumTraits.Trait(dir);
+			DirEnumTrait trait = DirEnumTraits.Trait((int)dir);
 			if ( !trait.Orth ) throw new ArgumentException("Can only use orthogonal directions to add a row");
 
 			// old wide/tall
@@ -221,6 +222,7 @@ namespace Realm {
 
 			return temp;
 		}
+
 	}
 
 }

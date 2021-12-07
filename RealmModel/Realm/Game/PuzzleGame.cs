@@ -6,6 +6,8 @@ namespace Realm.Game {
 	using Realm.Brain;
 	using Realm.Puzzle;
 
+	using Realm.Enums;
+
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
@@ -21,60 +23,117 @@ namespace Realm.Game {
 	/// </summary>
 	public class PuzzleGame {
 
-		public PuzzleGame() : this(new PuzzleMap()) {}
+		public PuzzleGame() : this(new PuzzleMap(), new SimpleBrain() ) {}
 
-		public PuzzleGame( PuzzleMap start ) {
-			turnStates.Add( new PuzzleState( start ) );	// slot zero
+		public PuzzleGame( PuzzleMap start, BrainIf mind ) {
+
+			this.Snapshots = new List<PuzzleSnapshot>();
+			this.Snapshots.Add( new PuzzleSnapshot( start ) );	// slot zero
+
+			this.Mind = mind;
+
+			this.Queue = new ActorQueue();
 		}
 
 		// one brain per active faction, with PlayerBrain as zero
-		public List<BrainIF> Mind {  get; set; }
+		public BrainIf Mind {  get; set; }
 
-		// snapshot of puzzle after individual agent action-chains
-		internal List<PuzzleState> actionStates = new List<PuzzleState>();
+		public GameStateEnum State { get; set; }
 
-		// snapshot of game just before player turn ( which is followed by faction turns )
-		internal List<PuzzleState> turnStates = new List<PuzzleState>();
+		// snapshot of puzzle after individual agent action-chains :: do we also need marks at 'turn' points?
+		public List<PuzzleSnapshot> Snapshots { get; internal set; }
 
-		/// <summary>
-		/// Is the game state such the player must take actions ?
-		/// </summary>
-		/// <returns></returns>
-		public bool IsPlayerTurn() {
-			return true;
-		}
+		public ActorQueue Queue { get; internal set; }
 
-		public bool IsGameOver() {
-			return false;
-		}
+//======================================================================================================================
 
 		/// <summary>
-		/// True when it is NOT the playersw turn, and game is not over.
+		/// Who will perform the next action
 		/// </summary>
 		/// <returns></returns>
-		public bool HasNext() {
-			return true;
+		public Agent GetNextActor() {
+			return Queue.Next();
+		}
+
+		public PuzzleMap GetCurrentMap() {
+			return Snapshots.Last<PuzzleSnapshot>().Puzzle;
 		}
 
 		/// <summary>
-		/// What are all the enemy faction actions?
+		/// Mind will build the next action for the current agent.
 		/// </summary>
 		/// <returns></returns>
-		public List<ActionChain> Next() {
-			return null;
+		public ActionChain GetNextAction() {
+			return Mind.ChooseAction( GetCurrentMap(), GetNextActor() );
 		}
 
-		public PuzzleState GetState( int turnId ) {
-			return turnStates[turnId];
+		public void ApplyAction( ActionChain action ) {
+			var nextMap = ActionHandler.Apply( GetCurrentMap(), action );
+			Snapshots.Add( new PuzzleSnapshot( action, nextMap ) );
+			Queue.NextTurn( action.Actor );
 		}
 
-		public void SetStartState( PuzzleMap map ) {
-			turnStates[0] = new PuzzleState( null, map );
-		}
+		//var state = game.GetState();
+		//while (state!=GameState.Stable) { 
+		//	var agent = game.NextAgent();
+		//	var action = game.NextAction();
+		//	var state = game.ApplyAction( action );
+		//	Print("Game State = "+state);
+		//}
 
-		public void SetState( int turnId, ActionChain actions, PuzzleMap map ) {
-			turnStates[turnId] = new PuzzleState( actions,map );
-		}
+
+//======================================================================================================================
+
+
+		///// <summary>
+		///// Is the game state such the player must take actions ?
+		///// </summary>
+		///// <returns></returns>
+		//public bool IsPlayerTurn() {
+		//	return true;
+		//}
+
+		//public bool IsGameOver() {
+		//	return false;
+		//}
+
+		///// <summary>
+		///// True when it is NOT the playersw turn, and game is not over.
+		///// </summary>
+		///// <returns></returns>
+		//public bool HasNext() {
+		//	return true;
+		//}
+
+		///// <summary>
+		///// What are all the enemy faction actions?
+		///// </summary>
+		///// <returns></returns>
+		//public List<ActionChain> Next() {
+		//	return null;
+		//}
+
+		//public PuzzleSnapshot GetState( int turnId ) {
+		//	return turnSnapshots[turnId];
+		//}
+
+		//public void SetFirstSnapshot( PuzzleMap map ) {
+		//	turnSnapshots[0] SetStartStatemap );
+		//}
+
+		//public void SetState( int turnId, ActionChain actions, PuzzleMap map ) {
+		//	turnSnapshots[turnId] = new PuzzleSnapshot( actions,map );
+		//}
+
+
+
+			//		var state = game.GetState();
+			//while (state!=GameState.Stable) { 
+			//	var agent = game.NextAgent();
+			//	var action = game.NextAction();
+			//	var state = game.ApplyAction( action );
+			//	Print("Game State = "+state);
+			//}
 	}
 
 }

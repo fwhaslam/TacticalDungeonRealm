@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Realm.Tools;
 
 namespace Realm.Game {
 	
@@ -17,7 +18,12 @@ namespace Realm.Game {
 	/// </summary>
 	public class ActionChain {
 
-		public Agent actor { get; set; }
+		public ActionChain(Agent agent) {
+			this.Actor = agent;
+			Actions = new List<Action>();
+		}
+
+		public Agent Actor { get; internal set; }
 
 		public List<Action> Actions {  get; set; }
 

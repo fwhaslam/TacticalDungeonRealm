@@ -1,14 +1,13 @@
-﻿using Realm.Puzzle;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using YamlDotNet.Serialization;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
 
 namespace Realm {
+
+	using Realm.Puzzle;
+
+	using YamlDotNet.Serialization;
+
 	public class RealmManager {
 
 		static public string DumpLevelMap( PuzzleMap map ) {

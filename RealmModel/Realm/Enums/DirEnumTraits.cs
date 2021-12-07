@@ -10,12 +10,14 @@ namespace Realm.Enums {
 
 	public class DirEnumTrait {
 
-		public DirEnumTrait( int dx,int dy,bool orth,int stp ) {
+		public DirEnumTrait( DirEnum dir, int dx,int dy,bool orth,int stp ) {
+			this.DirIx = (int)dir;
 			this.DX = dx;
 			this.DY = dy;
 			this.Orth = orth;
 			this.Steps = stp;
 		}
+		public int DirIx { get; internal set; }
 		public int DX {  get; internal set; }
 		public int DY {  get; internal set; }
 
@@ -31,36 +33,52 @@ namespace Realm.Enums {
 	public class DirEnumTraits {
 
 		static readonly DirEnumTrait[] traits = {
-			new DirEnumTrait( 0, 1, true, 2 ),	// north
-			new DirEnumTrait( 1, 1, false,  3 ),
-			new DirEnumTrait( 1, 0, true, 2 ),
-			new DirEnumTrait( 1, -1, false, 3 ),
+			new DirEnumTrait( DirEnum.North,		0, 1, true, 2 ),	// north
+			new DirEnumTrait( DirEnum.NorthEast,	1, 1, false,  3 ),
+			new DirEnumTrait( DirEnum.East,			1, 0, true, 2 ),
+			new DirEnumTrait( DirEnum.SouthEast,	1, -1, false, 3 ),
 
-			new DirEnumTrait( 0, -1, true, 2 ),	// south
-			new DirEnumTrait( -1, -1, false, 3 ),
-			new DirEnumTrait( -1, 0, true, 2 ),
-			new DirEnumTrait( -1, 1, false, 3 )
+			new DirEnumTrait( DirEnum.South,		0, -1, true, 2 ),	// south
+			new DirEnumTrait( DirEnum.SouthWest,	-1, -1, false, 3 ),
+			new DirEnumTrait( DirEnum.West,			-1, 0, true, 2 ),
+			new DirEnumTrait( DirEnum.NorthWest,	-1, 1, false, 3 )
 
 		};
 
+		// set once, becomes constant
 		static public readonly int Count =  Enum.GetNames(typeof(DirEnum)).Length; 
 
+		// set once, becomes constant?
 		static public readonly IEnumerable<int> Range = Enumerable.Range(0,Count);
 
-		static public int DX(DirEnum dir) { return traits[(int)dir].DX; }
+		static public int DirIx(DirEnum dir) { return traits[(int)dir].DirIx; }
 
-		static public int DY(DirEnum dir) { return traits[(int)dir].DY; }
+		static public int DX(int dir) { return traits[dir].DX; }
 
-		static public bool Orth(DirEnum dir) { return traits[(int)dir].Orth; }
+		static public int DY(int dir) { return traits[dir].DY; }
 
-		static public int Steps(DirEnum dir) { return traits[(int)dir].Steps; }
+		static public bool Orth(int dir) { return traits[dir].Orth; }
 
-		static public DirEnumTrait Trait(DirEnum dir) { return traits[(int)dir]; }
+		static public int Steps(int dir) { 
+			return traits[dir].Steps; 
+		}
+
+		static public DirEnumTrait Trait(int dir) { return traits[dir]; }
 
 		static public DirEnumTrait[]  All {  
 			get {return traits; }
 		}
 
+		/// <summary>
+		/// given a starting face and ending face, do we turn up to four right, or up to three left?
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <returns>Negative for left turns, positive for right turns.</returns>
+		static public int Turns( int start, int end ) {
+			var turns = ( end + Count - start ) % Count;
+			return ( turns>4 ? turns-8 : turns );
+		}
 	}
 
 }
