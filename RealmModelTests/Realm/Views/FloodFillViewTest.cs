@@ -9,78 +9,63 @@ namespace Realm.Views {
 	using Realm.Puzzle;
 	using Realm.Tools;
 
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
+	using Verbose.Utility;
 
 	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-	using static Utility.AssertStringLinesUtility;
+	//using static Utility.AssertStringLinesUtility;
+	using static Verbose.Utility.VerboseAsserts;
 
 	[TestClass]
 	public class FloodFillViewTest {
 
 		[TestMethod]
 		public void Constructor() {
+
+			var map = PuzzleMapTest.Sample();
 			
-			var result = new FloodFillView();
+			var result = new FloodFillView( map.Places );
 
-			IsNull( result.Values );
+			AreEqual( 25, result.View.Length );
 
 		}
 
-		[TestMethod]
-		public void Values_getSet() {
-
-			var work = new FloodFillView();
-			Grid<int> grid = new Grid<int>(1,1);
-			grid[0,0] = 123;
-
-			// invocation
-			work.Values = grid;
-
-			// assertions
-			AreEqual( work.Values, grid );
-			AreEqual( 123, work.Values[0,0] );
-			AreEqual( 1, work.Values.Wide );
-			AreEqual( 1, work.Values.Tall );
-		}
 		
 		[TestMethod]
 		public void Reset() {
 
-			var work = new FloodFillView();
-			work.Reset(2,2);
-
+			var map = PuzzleMapTest.Sample();
+			var work = new FloodFillView( map.Places );
 
 			// invocation
-			var result = work.ToDisplay();
+			work.ResetValues( 3 );
 
 			// assertion
-Console.Out.WriteLine("DISPLAY="+result);
-			StringLinesAreEqual("FloodFillView[\n"+
-				"    -1-1\n"+
-				"    -1-1\n"+
-				"]", result );
+			StringsAreEqual("FloodFillView[\n"+
+				"      3  3  3  3  3\n"+
+				"      3  3  3  3  3\n"+
+				"      3  3  3  3  3\n"+
+				"      3  3  3  3  3\n"+
+				"      3  3  3  3  3\n"+
+				"]", work.ToDisplay() );
 		}
 
 		[TestMethod]
 		public void ToDisplay() {
 
-			var work = new FloodFillView();
-			work.Reset(3,3);
-			work.Values[1,1] = 123;
+			var map = PuzzleMapTest.Sample();
+			var work = new FloodFillView( map.Places);
 
 
 			// invocation
 			var result = work.ToDisplay();
 
 			// assertion
-			StringLinesAreEqual( "FloodFillView[\n"+
-				"      -1  -1  -1\n"+
-				"      -1 123  -1\n"+
-				"      -1  -1  -1\n"+
+			StringsAreEqual( "FloodFillView[\n"+
+				"     -1 -1 -1 -1 -1\n"+
+				"     -1 -1 -1 -1 -1\n"+
+				"     -1 -1 -1 -1 -1\n"+
+				"     -1 -1 -1 -1 -1\n"+
+				"     -1 -1 -1 -1 -1\n"+
 				"]", result );
 		}
 

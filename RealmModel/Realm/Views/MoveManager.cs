@@ -1,22 +1,35 @@
-﻿using Realm.Puzzle;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
 
 namespace Realm.Views {
 
+	using Realm.Puzzle;
+	using Realm.Tools;
+	using Realm.Views.Decider;
+
+	/// <summary>
+	/// Discover valid desitnations for the agent/map combination.
+	/// </summary>
 	public class MoveManager {
 
-		public PuzzleMap Map {  get; set; }
+		public FloodFillView GetAgentMoves( PuzzleMap map, Agent who) {
 
-		public Agent Who { get; set; }
+			var decider = new AgentMoveStepDecider( who );
+			var starts = decider.GetStarts( map );
 
-		public AgentMoveView GetAllMoves() {
-			var move = new AgentMoveView();
-			move.DoStepFill( Map, Who );
+			var move = new FloodFillView( map.Places );
+			move.DoStepFill( starts, decider.Decide );
+			return move;
+		}
+
+		public FloodFillView GetAgentPaths( PuzzleMap map, Agent who) {
+
+			var decider = new AgentPathsStepDecider( who );
+			var starts = decider.GetStarts( map );
+
+			var move = new FloodFillView( map.Places );
+			move.DoStepFill( starts, decider.Decide );
 			return move;
 		}
 	}
