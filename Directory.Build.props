@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+
+    <Version>0.0.7-alpha</Version>
+
+    <TargetFrameworks>net4.7.1</TargetFrameworks>
+
+    <ProjectKey>RealmModel</ProjectKey>
+
+    <Verbose_Version>0.0.4</Verbose_Version>
+
+  </PropertyGroup>
+  
+</Project>

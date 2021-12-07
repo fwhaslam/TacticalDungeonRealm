@@ -1,31 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net4.7.1</TargetFramework>
-    <ProjectName>RealmModelTests</ProjectName>
-    <Version>0.0.5</Version>
-    <Company>FredHaslam</Company>
-    <Product>FredHaslam</Product>
-    <!--<AssemblyName>$(ProjectName)_$(Version)</AssemblyName>-->
-  </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+
+    <!--<PackageReference Include="NSubstitute" Version="4.2.2" />-->
+    <PackageReference Include="FakeItEasy" Version="7.2.0" />
+    <PackageReference Include="JustMock" Version="2021.3.1110.2" />
+    <!--<PackageReference Include="Typemock.Isolator" Version="9.0.4" />-->
+
+    <!-- needed for net5.0 builds -->
+    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />-->
+    
+    <!-- needed for net4.7.1 builds -->
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
-    <PackageReference Include="coverlet.collector" Version="3.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NuGet.Core" Version="2.14.0" />
-    <PackageReference Include="xunit.assert" Version="2.4.1" />
+    
+    <!-- Fred Haslam Packages -->
+    <PackageReference Include="Verbose" Version="$(Verbose_Version)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RealmModel\RealmModel.csproj" />
-    <!--<ProjectReference Include="..\..\..\..\..\Verbose\Verbose\Verbose.csproj" />-->
-    <!--<Content Include="lib\IncludedDLL.dll" />-->
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="RealmModelDeployNugetPackage.bat $(Version) $(ProjectKey)" />
+  </Target>
 
 </Project>
