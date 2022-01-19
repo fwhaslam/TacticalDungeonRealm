@@ -3,17 +3,17 @@
 //
 
 namespace Realm.Game {
-	using Realm.Brain;
-	using Realm.Puzzle;
-
-	using Realm.Enums;
 
 	using System;
-	using System.Collections.Generic;
 	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
+	using System.Collections.Generic;
 
+	using Realm.Brain;
+	using Realm.Puzzle;
+	using Realm.Enums;
+	using Realm.Game.Action;
+
+	using static Realm.Tools.YamlTools;
 
 	/// <summary>
 	/// A game is a puzzle in progress.  The game states are organized into 'actions' and 'turns'.
@@ -23,117 +23,133 @@ namespace Realm.Game {
 	/// </summary>
 	public class PuzzleGame {
 
-		public PuzzleGame() : this(new PuzzleMap(), new SimpleBrain() ) {}
+		public PuzzleGame() : this(new PuzzleMap(), new ChaseBrain() ) {}
 
-		public PuzzleGame( PuzzleMap start, BrainIf mind ) {
+		public PuzzleGame( PuzzleMap map ) : this( map, new ChaseBrain() ) {}
 
-			this.Snapshots = new List<PuzzleSnapshot>();
-			this.Snapshots.Add( new PuzzleSnapshot( start ) );	// slot zero
+		public PuzzleGame( PuzzleMap template, BrainIf mind ) {
 
-			this.Mind = mind;
+			this.Template = template;
+			this.Snapshots = new List<PlaySnapshot>();
+			var start = new PlayMap( template );
+			this.Snapshots.Add( new PlaySnapshot( start ) );	// slot zero
 
-			this.Queue = new ActorQueue();
+			this.Queue = new ActorQueue( start.Agents );
+			var maxFaction = 1 + Queue.MaxFaction;
+
+			this.Minds = new BrainIf[ maxFaction ];
+			for (int ix=0;ix<maxFaction;ix++) this.Minds[ix] = mind;
+
+			RoundIndex = new List<int>();
+			RoundIndex.Add( 0 );		// first turn points to first snapshot.
 		}
 
-		// one brain per active faction, with PlayerBrain as zero
-		public BrainIf Mind {  get; set; }
+		public PuzzleMap Template { get; internal set; }
+
+		// one brain per active faction :: Player = PlayerBrain
+		public BrainIf[] Minds {  get; internal set; }
 
 		public GameStateEnum State { get; set; }
 
-		// snapshot of puzzle after individual agent action-chains :: do we also need marks at 'turn' points?
-		public List<PuzzleSnapshot> Snapshots { get; internal set; }
+		// snapshot of map after individual agent turns :: do we also need marks at 'turn' points?
+		public List<PlaySnapshot> Snapshots { get; internal set; }
 
 		public ActorQueue Queue { get; internal set; }
 
 //======================================================================================================================
 
+		// index into snapshots for start of round
+		public List<int> RoundIndex { get; internal set; }
+
+		public int CurrentRound() {  return RoundIndex.Count; }
+
 		/// <summary>
-		/// Who will perform the next action
+		/// No more actions are possible.
 		/// </summary>
 		/// <returns></returns>
-		public Agent GetNextActor() {
-			return Queue.Next();
+		public bool IsOver() {
+			int first = -1;
+			foreach ( var agent in GetCurrentMap().Agents ) {
+				if (agent.IsDefeated()) continue;
+				if (first<0) { 
+					first = agent.Faction; 
+				}
+				else {
+					if (agent.Faction!=first) return false;
+				}
+			}
+			return true;
 		}
 
-		public PuzzleMap GetCurrentMap() {
-			return Snapshots.Last<PuzzleSnapshot>().Puzzle;
+//======================================================================================================================
+
+		public PlayMap GetCurrentMap() {
+			return Snapshots.Last<PlaySnapshot>().Arena;
 		}
 
 		/// <summary>
 		/// Mind will build the next action for the current agent.
 		/// </summary>
 		/// <returns></returns>
-		public ActionChain GetNextAction() {
-			return Mind.ChooseAction( GetCurrentMap(), GetNextActor() );
+		public GameTurn GetNextAction() {
+
+			var agentCode = Queue.Peek();
+			if (agentCode<0) return new GameTurn( agentCode );
+
+			var map = GetCurrentMap();
+			var actor = map.Agents[ agentCode ];
+			var mind = Minds[actor.Faction];
+
+			return mind.ChooseAction( map, actor );
 		}
 
-		public void ApplyAction( ActionChain action ) {
-			var nextMap = ActionHandler.Apply( GetCurrentMap(), action );
-			Snapshots.Add( new PuzzleSnapshot( action, nextMap ) );
-			Queue.NextTurn( action.Actor );
+		/// <summary>
+		/// For Player games, we apply action, making snapshots at each step.
+		/// </summary>
+		/// <param name="action"></param>
+		public void ApplyAction( GameTurn action ) {
+			ApplyAction( action, true );
 		}
 
-		//var state = game.GetState();
-		//while (state!=GameState.Stable) { 
-		//	var agent = game.NextAgent();
-		//	var action = game.NextAction();
-		//	var state = game.ApplyAction( action );
-		//	Print("Game State = "+state);
-		//}
+		/// <summary>
+		/// For analysis, we apply actions without making snapshots.
+		/// </summary>
+		/// <param name="action"></param>
+		public void DriveAction( GameTurn action ) {
+			ApplyAction( action, false );
+		}
 
 
-//======================================================================================================================
+		/// <summary>
+		/// UIse an action to alter the underlying map.  
+		/// For Player games we make snapshots, for analysis we do not.
+		/// </summary>
+		/// <param name="action"></param>
+		/// <param name="makeSnapshots"></param>
+		internal void ApplyAction( GameTurn action, Boolean makeSnapshots ) {
 
+//Console.Out.WriteLine("SNAPSHOT COUNT = "+Snapshots.Count);
+//Console.Out.WriteLine("====================\n" + ToYamlString(GetCurrentMap()) + "\n====================");
 
-		///// <summary>
-		///// Is the game state such the player must take actions ?
-		///// </summary>
-		///// <returns></returns>
-		//public bool IsPlayerTurn() {
-		//	return true;
-		//}
+			var workMap = GetCurrentMap();
+			if (makeSnapshots) {
+				workMap = workMap.Clone();
+				Snapshots.Add( new PlaySnapshot( action, workMap ) );
+			}
+			
+			ActionHandler.Apply( workMap, action );
 
-		//public bool IsGameOver() {
-		//	return false;
-		//}
+			// mark a new round
+			if (action.NextRound??false) {
+				RoundIndex.Add( Snapshots.Count );
+			}
 
-		///// <summary>
-		///// True when it is NOT the playersw turn, and game is not over.
-		///// </summary>
-		///// <returns></returns>
-		//public bool HasNext() {
-		//	return true;
-		//}
+		}
 
-		///// <summary>
-		///// What are all the enemy faction actions?
-		///// </summary>
-		///// <returns></returns>
-		//public List<ActionChain> Next() {
-		//	return null;
-		//}
+		public void Advance() {
+			Queue.Pop();
+		}
 
-		//public PuzzleSnapshot GetState( int turnId ) {
-		//	return turnSnapshots[turnId];
-		//}
-
-		//public void SetFirstSnapshot( PuzzleMap map ) {
-		//	turnSnapshots[0] SetStartStatemap );
-		//}
-
-		//public void SetState( int turnId, ActionChain actions, PuzzleMap map ) {
-		//	turnSnapshots[turnId] = new PuzzleSnapshot( actions,map );
-		//}
-
-
-
-			//		var state = game.GetState();
-			//while (state!=GameState.Stable) { 
-			//	var agent = game.NextAgent();
-			//	var action = game.NextAction();
-			//	var state = game.ApplyAction( action );
-			//	Print("Game State = "+state);
-			//}
 	}
 
 }
