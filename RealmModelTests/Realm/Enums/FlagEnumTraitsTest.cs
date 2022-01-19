@@ -3,6 +3,7 @@
 //
 
 namespace Realm.Enums {
+
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	using System;
@@ -17,16 +18,31 @@ namespace Realm.Enums {
 	public class FlagEnumTraitsTest {
 
 		[TestMethod]
+		public void Count() {
+			AreEqual( 17, FlagEnumTraits.Count() );
+		}
+
+		[TestMethod]
+		public void FromSymbolMap() {
+			AreEqual( 17, FlagEnumTraits.FromSymbolMap.Count() );
+		}
+
+		[TestMethod]
+		public void ToSymbolMap() {
+			AreEqual( 17, FlagEnumTraits.FromSymbolMap.Count() );
+		}
+
+		[TestMethod]
 		public void Symbol() { 
 		
-			AreEqual( 'X', FlagEnumTraits.Symbol( FlagEnum.Switch) );
+			AreEqual( 'T', FlagEnumTraits.Symbol( FlagEnum.Switch) );
 			AreEqual( '.', FlagEnumTraits.Symbol( FlagEnum.None) );
 		}
 
 		[TestMethod]
 		public void FromSymbol() { 
 		
-			AreEqual( FlagEnum.Switch, FlagEnumTraits.FromSymbol( 'X' ) );
+			AreEqual( FlagEnum.Switch, FlagEnumTraits.FromSymbol( 'T' ) );
 			AreEqual( FlagEnum.None, FlagEnumTraits.FromSymbol( '.' ) );
 		}
 

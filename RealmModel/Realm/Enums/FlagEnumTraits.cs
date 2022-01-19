@@ -9,24 +9,48 @@ namespace Realm.Enums {
 
 	public class FlagEnumTraits {
 
-		static readonly char[] Symbols = {
-			'.', 
-			'E','D','H','C','S',
-			'L','X','G','P','M',
-			'-','+','K','A','B'
+
+		static internal readonly Dictionary<char,FlagEnum> FromSymbolMap = new Dictionary<char, FlagEnum>() {
+
+			{ '.', FlagEnum.None },
+
+			{ 'E', FlagEnum.Entry },
+			{ 'X', FlagEnum.Exit },
+
+			{ 'D', FlagEnum.Door },
+			{ 'H', FlagEnum.Hostage },
+			{ 'C', FlagEnum.Chest },
+			{ 'S', FlagEnum.Sack },
+
+			{ 'L', FlagEnum.Lever },
+			{ 'T', FlagEnum.Switch },
+			{ 'G', FlagEnum.Gears },
+			{ 'P', FlagEnum.Pitfall },
+			{ 'M', FlagEnum.Masher },
+
+			{ '-', FlagEnum.Lower },
+			{ '+', FlagEnum.Raise },
+			{ 'K', FlagEnum.Spikes },
+			{ 'A', FlagEnum.Arrows },
+			{ 'B', FlagEnum.Boulder },
 		};
 
-		static readonly List<char> SymbolList = new List<char>(Symbols);
+		static internal readonly Dictionary<FlagEnum,char> ToSymbolMap = new Dictionary<FlagEnum,char>();
 
-		static public int Count() { return Enum.GetNames(typeof(DirEnum)).Length; }
+		static FlagEnumTraits() {
+			foreach (KeyValuePair<char, FlagEnum> entry in FromSymbolMap) {
+				ToSymbolMap[ entry.Value ] = entry.Key;
+			}
+		}
+
+		static public int Count() { return Enum.GetNames(typeof(FlagEnum)).Length; }
 
 		static public char Symbol(FlagEnum flag) {
-			return Symbols[(int)flag];
+			return ToSymbolMap[flag];
 		}
 
 		static public FlagEnum FromSymbol( char symbol) {
-			int value = SymbolList.IndexOf(symbol);
-			return (FlagEnum)value;
+			return FromSymbolMap[symbol];
 		}
 	}
 

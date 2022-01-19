@@ -1,10 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
+
+
 
 namespace Realm.Enums {
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
 	public class HeightEnumTraits {
 

@@ -45,6 +45,10 @@ namespace Realm.Enums {
 
 		};
 
+		public DirEnumTrait this[int index] {
+			get { return traits[ index ]; }
+		}
+
 		// set once, becomes constant
 		static public readonly int Count =  Enum.GetNames(typeof(DirEnum)).Length; 
 

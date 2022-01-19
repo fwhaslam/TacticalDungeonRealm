@@ -19,8 +19,9 @@ namespace Realm.Enums {
 
 		Active,		// will move and attack visible foes
 		Blocking,	// agent is currently defending
-		Alert,		// [Default] unit is waiting, but will become active if it spots nearby foes
+		Bored,		// [Default] unit is waiting, but will become active if it spots nearby foes
 		Stunned,	// unit is unable to move for one turn, then becomes Alert
-		Sleep		// unit is waiting, will become active if struck or foe moves adjacent
+		Sleep,		// unit is waiting, will become active if struck or foe moves adjacent
+		Dead		// done, remove from map ( leave behind a corpse image )
 	}
 }

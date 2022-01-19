@@ -14,6 +14,8 @@ namespace Realm.Enums {
 		None,
 
 		Entry,		// heros start here
+		Exit,		// heros end here
+
 		Door,		// blocks until 'locks' trait opens
 		Hostage,	// primary goal, all primaries = game over
 		Chest,		// primary goal, all primaries = game over
