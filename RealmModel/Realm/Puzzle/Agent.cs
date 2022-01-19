@@ -79,7 +79,7 @@ namespace Realm.Puzzle {
 
 		[YamlMember(Alias = "status")]
 		[DefaultValue(-1)]
-		public StatusEnum Status { get; set; } = StatusEnum.Alert;
+		public StatusEnum Status { get; set; } = StatusEnum.Waiting;
 
 		[YamlMember(Alias = "faction")]
 		[DefaultValue(-1)]

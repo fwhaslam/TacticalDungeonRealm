@@ -153,7 +153,7 @@ namespace Realm.Puzzle {
 			who.Status = StatusEnum.Active;
 			IsTrue( who.IsActionReady() );
 
-			who.Status = StatusEnum.Alert;
+			who.Status = StatusEnum.Waiting;
 			IsFalse( who.IsActionReady() );
 		}
 	}

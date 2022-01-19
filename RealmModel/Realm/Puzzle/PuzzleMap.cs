@@ -77,7 +77,7 @@ namespace Realm.Puzzle {
 		/// Faction=0, Status=Alert
 		/// </summary>
 		public Agent AddAgent(AgentType type, Where loc, DirEnum face) {
-			return AddAgent( type, loc, face, 0, StatusEnum.Alert );
+			return AddAgent( type, loc, face, 0, StatusEnum.Waiting );
 		}
 
 		/// <summary>

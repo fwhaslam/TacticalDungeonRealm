@@ -85,7 +85,7 @@ namespace Realm.Brain {
 			actor.Status = StatusEnum.Active;
 			actor.Face = DirEnum.West;
 
-			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Waiting );
 
 			var map = new PlayMap(puzzle);
  
@@ -116,7 +116,7 @@ namespace Realm.Brain {
 			actor.Status = StatusEnum.Active;
 			actor.Face = DirEnum.West;
 
-			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(2,4), DirEnum.North, 1, StatusEnum.Alert );
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(2,4), DirEnum.North, 1, StatusEnum.Waiting );
 
 			var map = new PlayMap(puzzle);
 
@@ -143,10 +143,10 @@ namespace Realm.Brain {
 			var puzzle = PuzzleMapFactory.SimpleTerrain(6,6);
 
 			var actor = puzzle.Agents[0];
-			actor.Status = StatusEnum.Alert;
+			actor.Status = StatusEnum.Waiting;
 			actor.Face = DirEnum.West;
 
-			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Waiting );
  
 			var map = new PlayMap( puzzle );
 
