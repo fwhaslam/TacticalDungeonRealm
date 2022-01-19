@@ -11,24 +11,40 @@ namespace Realm.Tools {
 	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 
+	public class Tester : CloneableIf<Tester> {
+
+		public Tester(string val) {
+			this.Value = val;
+		}
+		public Tester(Tester src) {
+			this.Value = src.Value;
+		}
+
+		public string Value { get; set; }
+
+		public Tester Clone() {
+			return new Tester(this);
+		}
+	}
+
 	[TestClass]
 	public class GridTest {
 
-		static public Grid<int> Sample() {
-			var sample = new Grid<int>( 2, 3 );
+		static public Grid<Tester> Sample() {
+			var sample = new Grid<Tester>( 2, 3 );
 
-			sample[0] = 0;
-			sample[1] = 1;
-			sample[2] = 2;
-			sample[3] = 3;
-			sample[4] = 4;
-			sample[5] = 5;
+			sample[0] = new Tester("zero");
+			sample[1] = new Tester("one");
+			sample[2] = new Tester("two");
+			sample[3] = new Tester("three");
+			sample[4] = new Tester("four");
+			sample[5] = new Tester("five");
 
 			return sample;
 		}
 
 		[TestMethod]
-		public void Constructor_1D() {
+		public void Constructor_2D() {
 
 			// invocation
 			var result = Sample();
@@ -37,9 +53,39 @@ namespace Realm.Tools {
 			AreEqual( 2, result.Wide );
 			AreEqual( 3, result.Tall );
 
-			AreEqual( 0, result[0] );
-			AreEqual( 3, result[3] );
-			AreEqual( 5, result[5] );
+			AreEqual( "zero", result[0].Value );
+			AreEqual( "three", result[3].Value );
+			AreEqual( "five", result[5].Value );
+		}
+
+		[TestMethod]
+		public void Constructor_copy() {
+
+			// invocation
+			var result = new Grid<Tester>( Sample() );
+
+			// assertions
+			AreEqual( 2, result.Wide );
+			AreEqual( 3, result.Tall );
+
+			AreEqual( "zero", result[0].Value );
+			AreEqual( "three", result[3].Value );
+			AreEqual( "five", result[5].Value );
+		}
+
+		[TestMethod]
+		public void Clone() {
+
+			// invocation
+			var result = (Grid<Tester>)Sample().Clone();
+
+			// assertions
+			AreEqual( 2, result.Wide );
+			AreEqual( 3, result.Tall );
+
+			AreEqual( "zero", result[0].Value );
+			AreEqual( "three", result[3].Value );
+			AreEqual( "five", result[5].Value );
 		}
 
 		[TestMethod]
@@ -48,18 +94,18 @@ namespace Realm.Tools {
 			var work = Sample();
 
 			// invocations
-			work[1,0] = 10;
-			work[0,2] = 20;
+			work[1,0].Value = "ten";
+			work[0,2].Value = "twenty";
 
 			// assertions
 			AreEqual( 2, work.Wide );
 			AreEqual( 3, work.Tall );
 
-			AreEqual( 10, work[1,0] );
-			AreEqual( 20, work[0,2] );
+			AreEqual( "ten", work[1,0].Value );
+			AreEqual( "twenty", work[0,2].Value );
 
-			AreEqual( 0, work[0,0] );
-			AreEqual( 5, work[1,2] );
+			AreEqual( "zero", work[0,0].Value );
+			AreEqual( "five", work[1,2].Value );
 		}
 
 		[TestMethod]
@@ -68,11 +114,11 @@ namespace Realm.Tools {
 			var work = Sample();
 
 			// invocation
-			int sum = 0;
-			foreach( var element in work ) sum += element;
+			string sum = "";
+			foreach( var element in work ) sum += "/"+element.Value;
 
 			// assertions
-			AreEqual( 15, sum );
+			AreEqual( "/zero/one/two/three/four/five", sum );
 		}
 	}
 }

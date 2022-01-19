@@ -2,6 +2,10 @@
 //	Copyright 2021 Frederick William Haslam born 1962
 //
 
+using System.ComponentModel;
+
+using YamlDotNet.Serialization;
+
 namespace Realm.Tools {
 
 	/// <summary>
@@ -23,7 +27,7 @@ namespace Realm.Tools {
 			this.Y = src.Y;
 		}
 
-		override public string ToString() { return "Where("+X+","+Y+")";}
+		public string ToDisplay() { return "Where("+X+","+Y+")";}
 
 
 		public Where Set( int x, int y ) {
@@ -38,7 +42,15 @@ namespace Realm.Tools {
 			return this;
 		}
 
+
+		[YamlMember(Alias = "x")]
+		[DefaultValue(-1)]
 		public int X { get; set; }
+
+		
+		[YamlMember(Alias = "y")]
+		[DefaultValue(-1)]
+
 		public int Y { get; set; }
 
 		public int AddX(int dx) { this.X += dx; return this.X; }

@@ -5,23 +5,31 @@
 namespace Realm.Tools {
 
 	using System;
+	using System.Linq;
 	using System.Collections;
 	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
 
 	/// <summary>
 	/// 2D Array of generic values.  
 	/// Wide + Tall define the location function = y * wide + x
 	/// can be used to iterate over all elements.
 	/// </summary>
-	public class Grid<T> : IEnumerable<T> {
+	public class Grid<T> : IEnumerable<T>,CloneableIf<Grid<T>> where T : CloneableIf<T> {
 
 		public Grid( int wide, int tall ) {
 			this.Wide = wide;
 			this.Tall = tall;
 			this.Array = new T[ wide * tall ];
+		}
+
+		public Grid( Grid<T> src ) {
+			this.Wide = src.Wide;
+			this.Tall = src.Tall;
+			this.Array = new List<T>(src.Array).Select( p => p.Clone() ).ToArray();
+		}
+
+		public Grid<T> Clone() {
+			return new Grid<T>(this);
 		}
 
 		public int Wide {  get; internal set; }
