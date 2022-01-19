@@ -1,25 +1,22 @@
 # Tasks
 ============
 
+Rules and traits:
+ * can we ensure that they are being used? ( unit testing? )
+ * can we attach information to them to be used as hover tips
+ 
+ View/Floodfill
+  * need to start from target downhill view to create 'action remains' view
+  * 'action remains' has -1 for 'cannot enter', and 0 or 1 for actions left when entering.
+  * support for range and reach ( reach = polearms, range = bows )
+  * need line of sight view
+
 Resolve how puzzlemap is displayed in DCT ...
- * [done] need to ensure that North means 'top' of the display.
- * [done] change FloodFillView, PuzzleMap, Grid, DirEnum classes
- * [done] in DCT display, there is left and right rising .. is Left X or Y ?
  * from (0,0) left is (1,0) right is (0.1) .. so north is +1
  * need to invert map storage ( ? ) or switch 'north' delta
 
-
-[done] Add action logic utilities:
-* [done] tool to apply action-chains to create altered puzzlemaps
-* [done] game state evaluation, are we done?  Is there more?
+Add action logic utilities:
 * expand on concept of agent goals and fulfillment
-
-
-Switch to:
- * [done] AgentTurn ( named GameTurn )
- * [done] AgentId / Move-Sprint-Attack-Defend 
- * [done] MoveEnum-TargetDmg-NullBool
- * [done] with reversible description
 
 Use PlayMap, Brains and Actions in DragonCourtTactics.
 Clean up interface til basic game play is functional.

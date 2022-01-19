@@ -1,7 +1,7 @@
 # Release Notes
 ===============
 
-## 2021/12/30 :: 0.0.8-alpha
+## 2022/01/18 :: 0.0.8-alpha
 
 * Expanded enums, better association of traits to enums.
     
