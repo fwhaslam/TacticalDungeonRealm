@@ -14,13 +14,14 @@ namespace Realm.Views {
 	using System.Linq;
 	using System.Text;
 	using System.Threading.Tasks;
+	using Realm.Game;
 
 	/// <summary>
 	/// Base for flood fill views.
 	/// </summary>
 	public class FloodFillView {
 
-		public FloodFillView(PuzzleMap map) {
+		public FloodFillView(PlayMap map) {
 			View = GridStepper.Build( map.Places, -1 );
 		}
 

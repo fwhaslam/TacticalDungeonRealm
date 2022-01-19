@@ -7,6 +7,7 @@ namespace Realm.Views {
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	using Realm.Enums;
+	using Realm.Game;
 	using Realm.Puzzle;
 
 	using System;
@@ -15,13 +16,13 @@ namespace Realm.Views {
 	using static Verbose.Utility.VerboseAsserts;
 
 	[TestClass]
-	public class MoveManagerTest {
+	public class ViewManagerTest {
 
 		[TestMethod]
 		public void Constructor_settersGetters() {
 			
 			// invocations
-			var result = new MoveManager();
+			var result = new ViewManager();
 
 			// assertions
 			IsNotNull( result );
@@ -31,15 +32,17 @@ namespace Realm.Views {
 		[TestMethod]
 		public void GetAgentMoves() {
 
-			var work = new MoveManager();
-			var map = PuzzleMapTest.Sample();
-			var who = map.Agents[0];
+			var work = new ViewManager();
+			var puzzle = PuzzleMapTest.Sample();
+			var who = puzzle.Agents[0];
 
 			// agent(same faction) blocks
-			map.AddAgent( AgentType.GHOST, new Tools.Where(1,3), DirEnum.East );
+			puzzle.AddAgent( AgentType.GHOST, new Tools.Where(1,3), DirEnum.East );
 
 			// height blocks
-			map.Places[1,4].Height = HeightEnum.Three;
+			puzzle.Places[1,4].Height = HeightEnum.Three;
+
+			var map = new PlayMap( puzzle );
 
 			// invocation
 			var result = work.GetAgentMoves( map, who );
@@ -58,15 +61,17 @@ namespace Realm.Views {
 		[TestMethod]
 		public void GetAgentPaths() {
 
-			var work = new MoveManager();
-			var map = PuzzleMapTest.Sample();
-			var who = map.Agents[0];
+			var work = new ViewManager();
+			var puzzle = PuzzleMapTest.Sample();
+			var who = puzzle.Agents[0];
 
 //Console.Out.WriteLine( "AGENT[0]="+work.Map.Agents[0].ToDisplay() );
-			map.AddAgent( AgentType.GOBLIN, new Tools.Where(1,3), DirEnum.South);
-			map.Agents[1].Faction = 1;
-			map.AddAgent( AgentType.GOBLIN, new Tools.Where(4,0), DirEnum.South);
-			map.Agents[2].Faction = 2;
+			puzzle.AddAgent( AgentType.GOBLIN, new Tools.Where(1,3), DirEnum.South);
+			puzzle.Agents[1].Faction = 1;
+			puzzle.AddAgent( AgentType.GOBLIN, new Tools.Where(4,0), DirEnum.South);
+			puzzle.Agents[2].Faction = 2;
+
+			var map = new PlayMap( puzzle );
 
 			// invocation
 			var result = work.GetAgentPaths( map, who );

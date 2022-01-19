@@ -1,10 +1,11 @@
-﻿//
+﻿﻿//
 //	Copyright 2021 Frederick William Haslam born 1962
 //
 
 namespace Realm.Views.Decider {
 
 	using Realm.Enums;
+	using Realm.Game;
 	using Realm.Puzzle;
 	using Realm.Tools;
 	using Realm.Views.Stepper;
@@ -25,7 +26,7 @@ namespace Realm.Views.Decider {
 			this.Agent = who;
 		}
 
-		public List<Where> GetStarts(PuzzleMap map) {
+		public List<Where> GetStarts(PlayMap map) {
 			var starts = new List<Where>();
 			starts.Add( Agent.Where );
 			return starts;
@@ -57,7 +58,7 @@ namespace Realm.Views.Decider {
 			int climb = who.Type.Climb;
 
 			// cannot step onto another agent
-			if (ctx.Dest.Agent!=null) return false;
+			if (ctx.Dest.IsOccupied) return false;
 
 			// won't step into pit or wall
 			HeightEnum height = ctx.Dest.Height;

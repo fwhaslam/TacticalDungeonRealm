@@ -26,26 +26,26 @@ namespace Realm.Views.Stepper {
 			var place = map.Places[1,1];
 
 			var spot = result[place.Where];
-			AreEqual( "Where(1,1)", spot.Here.Where.ToString() );
+			AreEqual( "Where(1,1)", spot.Here.Where.ToDisplay() );
 
 			// step north
 			spot = spot[ (int)DirEnum.North ].There;
-			AreEqual( "Where(1,2)", spot.Here.Where.ToString() );
+			AreEqual( "Where(1,2)", spot.Here.Where.ToDisplay() );
 
 			// cannot step north
 			IsNull( spot[ (int)DirEnum.North ] );
 
 			// step south
 			spot = spot[ (int)DirEnum.South ].There;
-			AreEqual( "Where(1,1)", spot.Here.Where.ToString() );
+			AreEqual( "Where(1,1)", spot.Here.Where.ToDisplay() );
 
 			// step west
 			spot = spot[ (int)DirEnum.West ].There;
-			AreEqual( "Where(0,1)", spot.Here.Where.ToString() );
+			AreEqual( "Where(0,1)", spot.Here.Where.ToDisplay() );
 
 			// step east
 			spot = spot[ (int)DirEnum.East ].There;
-			AreEqual( "Where(1,1)", spot.Here.Where.ToString() );
+			AreEqual( "Where(1,1)", spot.Here.Where.ToDisplay() );
 
 		}
 	}

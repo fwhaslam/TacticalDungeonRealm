@@ -5,6 +5,7 @@
 namespace Realm.Views.Decider {
 
 	using Realm.Enums;
+	using Realm.Game;
 	using Realm.Puzzle;
 	using Realm.Tools;
 	using Realm.Views.Stepper;
@@ -32,7 +33,7 @@ namespace Realm.Views.Decider {
 		/// </summary>
 		/// <param name="map"></param>
 		/// <returns></returns>
-		public List<Where> GetStarts(PuzzleMap map) {
+		public List<Where> GetStarts(PlayMap map) {
 			var faction = Agent.Faction;
 			var starts = new List<Where>();
 			foreach ( var who in map.Agents ) {
