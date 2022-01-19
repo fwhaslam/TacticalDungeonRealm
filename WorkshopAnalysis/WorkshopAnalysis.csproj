@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectName>RealmModel</ProjectName>
+    <Company>FredHaslam</Company>
+    <Product>FredHaslam</Product>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealmModel\RealmModel.csproj" />
+  </ItemGroup>
+  
+</Project>

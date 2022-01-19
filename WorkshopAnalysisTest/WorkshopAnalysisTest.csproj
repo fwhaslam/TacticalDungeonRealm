@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net4.7.1</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+
+    <!-- needed for net5.0 builds -->
+    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />-->
+
+    <!-- needed for net4.7.1 builds -->
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+
+    <!-- Fred Haslam Packages -->
+    <PackageReference Include="Verbose" Version="$(Verbose_Version)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealmModel\RealmModel.csproj" />
+    <ProjectReference Include="..\RealmModelTests\RealmModelTests.csproj" />
+    <ProjectReference Include="..\WorkshopAnalysis\WorkshopAnalysis.csproj" />
+  </ItemGroup>
+  
+</Project>
