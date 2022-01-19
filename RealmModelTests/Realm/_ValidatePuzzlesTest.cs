@@ -2,21 +2,15 @@
 //	Copyright 2021 Frederick William Haslam born 1962 in the USA
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Utility;
-
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-
 namespace Realm {
+	
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+	using System;
+	using System.IO;
+	using Utility;
+
+	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 	using static Utility.SimpleTools;
 
 	/// <summary>

@@ -5,6 +5,8 @@
 namespace Realm {
 
 	using System;
+	using System.Collections.Generic;
+	using System.Text;
 
 	using Realm.Enums;
 	using Realm.Game;
@@ -64,7 +66,7 @@ namespace Realm {
 				do {
 					ax = rnd.Next(map.Wide);
 					at = rnd.Next(map.Tall);
-				} while (map.Places[ax, at].Agent!=null);
+				} while (map.Places[ax, at].IsOccupied);
 
 				DirEnum face = (DirEnum)rnd.Next(8);
 				AgentType type = AgentType.Get(rnd.Next(AgentType.Count()));
@@ -97,8 +99,7 @@ namespace Realm {
 		/// <param name="length"></param>
 		/// <returns></returns>
 		static public PuzzleMap SingleLineTerrain(int length) {
-
-			return PuzzleMap.Allocate( 1, length );
+			return PuzzleMap.Allocate( length, 1 );
 		}
 
 //======================================================================================================================
@@ -221,6 +222,119 @@ namespace Realm {
 			temp.Text = work.Text;
 
 			return temp;
+		}
+
+
+//======================================================================================================================
+
+		// format: HeightChar, FlagChar, AgentID(##)
+		//static readonly string PART_FORMAT = "%c%c%02d";
+
+		// one 'part' is one 'tile'
+		static readonly char STRING_PARTS_SEP = '/';
+
+		// agent ids
+		static readonly string NO_AGENT_SYMBOL = "__";
+		static readonly string AGENT_ID_FORMAT = "00";
+
+//======================================================================================================================
+
+		/// <summary>
+		/// Create an empty grid of places.
+		/// </summary>
+		/// <param name="grid"></param>
+		/// <returns></returns>
+		static internal Grid<Place> FillGrid( Grid<Place> grid ) {
+			for (int dt=0;dt<grid.Tall;dt++) {
+				for (int dw=0;dw<grid.Wide;dw++) {
+					grid[dw,dt] = new Place( dw, dt );
+				}
+			}
+			return grid;
+		}
+
+		/// <summary>
+		/// String representation of the map.
+		/// </summary>
+		/// <returns></returns>
+		static public List<string> MapAsStrings( PlayMap src ) {
+
+			StringBuilder buf = new StringBuilder();
+
+			List<string> list = new List<string>();
+			for (int row = 0; row < src.Tall; row++) {
+				buf.Clear();
+				for (int col = 0; col < src.Wide; col++) {
+//Console.Out.WriteLine("COL="+col+" row="+row);
+					if (col > 0) buf.Append(STRING_PARTS_SEP);
+
+					Place place = src.Places[col, row];
+					buf.Append(HeightEnumTraits.Symbol(place.Height));
+					buf.Append(FlagEnumTraits.Symbol(place.Flag));
+					if (!place.IsOccupied) {
+						buf.Append(NO_AGENT_SYMBOL);
+					}
+					else {
+						buf.Append(place.AgentId.ToString(AGENT_ID_FORMAT));
+					}
+				}
+				list.Add(buf.ToString());
+			}
+			return list;
+		}
+
+		/// <summary>
+		/// Use strings to reconstruct map.
+		/// </summary>
+		/// <param name="source"></param>
+		static public void StringsAsMap( PlayMap dst, List<string> source ) {
+
+//Console.Out.WriteLine("PLAYMAP SIZE = "+dst.Wide+"/"+dst.Tall);
+
+			// fix agent.Ident field
+			if (dst.Agents==null) dst.Agents = new List<Agent>();
+
+			List<Agent> agents = dst.Agents;
+			for (int id=0;id<agents.Count;id++) {
+				if (agents[id]!=null) agents[id].Ident = id;
+			}
+
+			// craete and parse grid
+			dst.Places = new Grid<Place>(dst.Wide,dst.Tall);
+			Grid<Place> places = dst.Places;
+
+			for (int row = 0; row < dst.Tall; row++) {
+
+				string line = source[row];
+				string[] parts = line.Split(STRING_PARTS_SEP);
+
+				for (int col = 0; col < dst.Wide; col++) {
+
+					Place place = new Place( col, row );
+					places[col,row] = place;
+					string part = parts[col];
+
+					// parse single location
+					place.Height = HeightEnumTraits.FromSymbol(part[0]);
+					place.Flag = FlagEnumTraits.FromSymbol(part[1]);
+
+					string symbol = "" + part[2] + part[3];
+					if (!symbol.Equals(NO_AGENT_SYMBOL)) {
+
+						int agentId;
+						try { agentId = int.Parse(symbol); }
+						catch (FormatException ex) { 
+							throw new FormatException("Invalid agent symbol [" + symbol + "] at [" + col + "/" + row + "]", ex); 
+						}
+
+						if (agentId > agents.Count) {
+							throw new FormatException("No agent defined for id=[" + agentId + "] at [" + col + "/" + row + "]");
+						}
+						place.AgentId = agentId;
+					}
+				}
+
+			}
 		}
 
 	}

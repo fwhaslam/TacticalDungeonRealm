@@ -34,13 +34,15 @@ namespace Realm {
 
 		static readonly string CHECK_LEVEL = "Title: Empty Map\n" +
 				"Image: pic1.png\n"+
+				"Text:\n" + 
+				"  Start: Some Story\n"+
 				"Wide: 8\n" +
 				"Tall: 8\n" +
 				"Agents:\n" +
-				"- Name: Peasant\n" +
-				"  Face: North\n" +
-				"  Status: Alert\n" +
-				"  Faction: 0\n" +
+    			"- name: Peasant\n"+
+				"  face: North\n"+
+				"  status: Alert\n"+
+				"  faction: 0\n"+
 				"Map:\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
@@ -49,9 +51,7 @@ namespace Realm {
 				"- 1.__/1.__/1.__/P.__/P.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
 				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
-				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n" +
-				"Text:\n" + 
-				"  Start: Some Story\n";
+				"- 1.__/1.__/1.__/1.__/1.__/1.__/1.__/1.__\n";
 
 		[TestMethod]
 		public void DumpLevelMap( ) {
@@ -80,8 +80,10 @@ Console.Out.WriteLine( "MAP>>"+RealmManager.DumpLevelMap( result ) );
 			AreEqual( 8, result.Wide );
 			AreEqual( 8, result.Tall );
 
-			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToString() );
-			AreEqual( "Peasant", result.Places[2,3].Agent.Name );
+			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToDisplay() );
+			AreEqual( -1, result.Places[0,0].AgentId );
+			AreEqual( 0, result.Places[2,3].AgentId );
+			AreEqual( "Peasant", result.Agents[0].Name );
 		}
 
 		[TestMethod]
@@ -97,8 +99,10 @@ Console.Out.WriteLine( "MAP>>"+RealmManager.DumpLevelMap( result ) );
 			AreEqual( 8, result.Wide );
 			AreEqual( 8, result.Tall );
 
-			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToString() );
-			AreEqual( "Peasant", result.Places[2,3].Agent.Name );
+			AreEqual( "Where(0,0)", result.Places[0,0].Where.ToDisplay() );
+			AreEqual( -1, result.Places[0,0].AgentId );
+			AreEqual( 0, result.Places[2,3].AgentId );
+			AreEqual( "Peasant", result.Agents[0].Name );
 		}
 
 		

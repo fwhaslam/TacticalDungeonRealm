@@ -8,14 +8,23 @@ namespace Realm {
 
 	using YamlDotNet.Serialization;
 
+	/// <summary>
+	/// Utility supports reading and writing of Save Files.
+	/// </summary>
 	public class RealmManager {
 
+		static readonly DefaultValuesHandling VALUE_HANDLING =  DefaultValuesHandling.OmitNull |  DefaultValuesHandling.OmitDefaults;
+
+		static readonly ISerializer SERIALIZER = new SerializerBuilder().ConfigureDefaultValuesHandling( VALUE_HANDLING ).Build();
+
+		static readonly IDeserializer DESERIALIZER = new Deserializer();
+
 		static public string DumpLevelMap( PuzzleMap map ) {
-			return new Serializer().Serialize(map);
+			return SERIALIZER.Serialize(map);
 		}
 
 		static public PuzzleMap ParseLevelMap( string content ) {
-			return new Deserializer().Deserialize<PuzzleMap>(content);
+			return DESERIALIZER.Deserialize<PuzzleMap>(content);
 		}
 
 	}

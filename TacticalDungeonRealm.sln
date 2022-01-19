@@ -30,6 +30,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_docs", "_docs", "{4B00D301
 		DragonCourtTacticsManual.md = DragonCourtTacticsManual.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkshopAnalysis", "WorkshopAnalysis\WorkshopAnalysis.csproj", "{FD9EF4EB-EA53-4E93-A71F-54096D61CA85}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkshopAnalysisTest", "WorkshopAnalysisTest\WorkshopAnalysisTest.csproj", "{E2989B33-D671-4479-8474-238E518BAE63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{517F8D0A-A980-49D4-8B92-A0B47C0D2C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517F8D0A-A980-49D4-8B92-A0B47C0D2C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{517F8D0A-A980-49D4-8B92-A0B47C0D2C87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD9EF4EB-EA53-4E93-A71F-54096D61CA85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD9EF4EB-EA53-4E93-A71F-54096D61CA85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD9EF4EB-EA53-4E93-A71F-54096D61CA85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD9EF4EB-EA53-4E93-A71F-54096D61CA85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2989B33-D671-4479-8474-238E518BAE63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2989B33-D671-4479-8474-238E518BAE63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2989B33-D671-4479-8474-238E518BAE63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2989B33-D671-4479-8474-238E518BAE63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

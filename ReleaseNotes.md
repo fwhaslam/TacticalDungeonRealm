@@ -1,6 +1,32 @@
 # Release Notes
 ===============
 
+## 2021/12/30 :: 0.0.8-alpha
+
+* Expanded enums, better association of traits to enums.
+    
+* Tools to support YAML production, and generic cloneable interface for deep-copy.
+
+* Added CloneableIf<> for generic deep-copy.
+
+* Added YamlTools and Yaml annotations to assets for consistent streaming.
+
+* Game assets:
+  * simplified PlayMap for game advancement
+  * actions became GameTurn, which ActionHandler will apply to PlayMap
+
+* Puzzle assets:
+  * PuzzleMap extends PlayMap
+  * Place uses AgentId instead of Agent ptr.  NO_AGENT_ID for empty place.
+
+* Flood Fill views using PlayMap instead of PuzzleMap
+
+* Brains using updated tooling to produce GameTurns.  Added CautiousBrain to ChaseBrain.
+
+* PlayMap grid as strings logic migrated to PuzzleMapFactory.
+
+* First draft of power analysis for agents, with framework for additional examinations.
+
 
 ## 2021/12/06 :: 0.0.7-alpha
 
