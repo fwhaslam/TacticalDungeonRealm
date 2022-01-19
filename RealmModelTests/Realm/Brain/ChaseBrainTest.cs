@@ -1,31 +1,24 @@
-﻿
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
 
 namespace Realm.Brain {
 
 	using Realm;
 	using Realm.Brain;
 	using Realm.Enums;
+	using Realm.Game;
 	using Realm.Puzzle;
 	using Realm.Tools;
 	using Realm.Views;
 
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
-
-	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-	using static Verbose.Utility.VerboseTools;
+	using static Realm.Tools.YamlTools;
 	using static Verbose.Utility.VerboseAsserts;
-	using Telerik.JustMock;
-	using Realm.Game;
-	using FakeItEasy;
+
 
 	[TestClass]
-	public class SimpleBrainTest {
+	public class ChaseBrainTest {
 
 		// SAMPLE METHOD demonstrating use of JustMock
 		//[TestMethod]
@@ -84,37 +77,30 @@ namespace Realm.Brain {
 		[TestMethod]
 		public void ChooseAction_active_approachNearbyEnemy() {
 
-
-			var mind = new SimpleBrain();
+			var mind = new ChaseBrain();
 			
-			var map = PuzzleMapFactory.SimpleTerrain(6,6);
-			var actor = map.Agents[0];
-			actor.Status = StatusEnum.Active;
+			var puzzle = PuzzleMapFactory.SimpleTerrain(6,6);
 
+			var actor = puzzle.Agents[0];
+			actor.Status = StatusEnum.Active;
 			actor.Face = DirEnum.West;
-			var foe = map.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
+
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
+
+			var map = new PlayMap(puzzle);
  
 			// invoke 
 			var result = mind.ChooseAction(map,actor);
  
 			// assert 
-			StringsAreEqual("[\n"+
-					"  {\n"+
-					"    \"Type\": \"Right\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Right\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Forward\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Right\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Forward\"\n"+
-					"  }\n"+
-					"]", AsPrettyString(result.Actions) );
+			StringsAreEqual( "actorId: 0\n"+
+					"move:\n"+
+					"- North\n"+
+					"- NorthEast\n"+
+					"sprint:\n"+
+					"- NorthEast\n"+
+					"- East\n"+
+					"", ToYamlString(result) );
 		}
 
 			
@@ -122,35 +108,29 @@ namespace Realm.Brain {
 		public void ChooseAction_active_approachAndAttackNearbyEnemy() {
 
 
-			var mind = new SimpleBrain();
+			var mind = new ChaseBrain();
 			
-			var map = PuzzleMapFactory.SimpleTerrain(6,6);
-			var actor = map.Agents[0];
-			actor.Status = StatusEnum.Active;
+			var puzzle = PuzzleMapFactory.SimpleTerrain(6,6);
 
+			var actor = puzzle.Agents[0];
+			actor.Status = StatusEnum.Active;
 			actor.Face = DirEnum.West;
-			var foe = map.AddAgent( AgentType.GHOST, new Where(2,4), DirEnum.North, 1, StatusEnum.Alert );
- 
+
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(2,4), DirEnum.North, 1, StatusEnum.Alert );
+
+			var map = new PlayMap(puzzle);
+
 			// invoke 
 			var result = mind.ChooseAction(map,actor);
  
 			// assert 
-			StringsAreEqual("[\n"+
-					"  {\n"+
-					"    \"Type\": \"Right\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Right\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Type\": \"Forward\"\n"+
-					"  },\n"+
-					"  {\n"+
-					"    \"Damage\": 1,\n"+
-					"    \"Target\": 1,\n"+
-					"    \"Type\": \"Attack\"\n"+
-					"  }\n"+
-					"]", AsPrettyString(result.Actions) );
+			StringsAreEqual( "actorId: 0\n"+
+					"move:\n"+
+					"- North\n"+
+					"attack:\n"+
+					"  TargetId: 1\n"+
+					"  Damage: 1\n"+
+					"", ToYamlString(result) );
 		}
 
 				
@@ -158,24 +138,25 @@ namespace Realm.Brain {
 		public void ChooseAction_alert_noAction() {
 
 
-			var mind = new SimpleBrain();
+			var mind = new ChaseBrain();
 			
-			var map = PuzzleMapFactory.SimpleTerrain(6,6);
-			var actor = map.Agents[0];
-			actor.Status = StatusEnum.Alert;
+			var puzzle = PuzzleMapFactory.SimpleTerrain(6,6);
 
+			var actor = puzzle.Agents[0];
+			actor.Status = StatusEnum.Alert;
 			actor.Face = DirEnum.West;
-			var foe = map.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
+
+			var foe = puzzle.AddAgent( AgentType.GHOST, new Where(5,5), DirEnum.North, 1, StatusEnum.Alert );
  
+			var map = new PlayMap( puzzle );
+
 			// invoke 
 			var result = mind.ChooseAction(map,actor);
  
 			// assert 
-			StringsAreEqual("[]", AsPrettyString(result.Actions) );
+			StringsAreEqual( "actorId: 0\n"+
+					"", ToYamlString(result) );
 		}
 
-
-
-			
 	}
 }

@@ -1,13 +1,12 @@
-﻿using Realm.Game;
-using Realm.Puzzle;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
 
 namespace Realm.Brain {
+
+	using Realm.Game;
+	using Realm.Game.Action;
+	using Realm.Puzzle;
 
 	public interface BrainIf {
 
@@ -17,7 +16,7 @@ namespace Realm.Brain {
 		/// <param name="map"></param>
 		/// <param name="actor"></param>
 		/// <returns></returns>
-		ActionChain ChooseAction( PuzzleMap map, Agent actor );
+		GameTurn ChooseAction( PlayMap map, Agent actor );
 	}
 
 }

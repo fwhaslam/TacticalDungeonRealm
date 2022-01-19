@@ -1,13 +1,12 @@
-﻿using Realm.Game;
-using Realm.Puzzle;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+//	Copyright 2021 Frederick William Haslam born 1962
+//
 
 namespace Realm.Brain {
+
+	using Realm.Game;
+	using Realm.Game.Action;
+	using Realm.Puzzle;
 
 	/// <summary>
 	/// Wrapper for player taking turns for the player faction.
@@ -21,7 +20,7 @@ namespace Realm.Brain {
 		/// <param name="who"></param>
 		/// <param name="puzzle"></param>
 		/// <returns></returns>
-		public ActionChain ChooseAction( PuzzleMap puzzle, Agent actor ) {
+		public GameTurn ChooseAction( PlayMap puzzle, Agent actor ) {
 			return null;
 		}
 	}
