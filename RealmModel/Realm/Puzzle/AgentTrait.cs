@@ -16,7 +16,7 @@ namespace Realm.Puzzle {
 		public string Key { get; internal set; }
 		public string Info { get; internal set; }
 
-		//======================================================================================================================
+//======================================================================================================================
 
 		// morale attributes
 		static public readonly AgentTrait COWARD =
@@ -36,7 +36,7 @@ namespace Realm.Puzzle {
 
 		// health attributes
 		static public readonly AgentTrait STURDY =
-			new AgentTrait("Sturday", "Has greater health.");
+			new AgentTrait("Sturdy", "Has greater health.");
 		static public readonly AgentTrait FRAIL =
 			new AgentTrait("Frail", "Has lower health.");
 
@@ -55,7 +55,7 @@ namespace Realm.Puzzle {
 			new AgentTrait("Short", "Can hide in rubble.");
 
 		static public readonly AgentTrait TALL =
-			new AgentTrait("Short", "Can climb two steps at a time.");
+			new AgentTrait("Tall", "Can climb two steps at a time.");
 
 		static public readonly AgentTrait HOVER =
 			new AgentTrait("Hover", "Can cross pits.  Cannot trigger switches.");

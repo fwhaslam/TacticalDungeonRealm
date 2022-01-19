@@ -11,26 +11,78 @@ namespace Realm.Puzzle {
 	using Realm.Tools;
 
 	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+	using static Realm.Tools.YamlTools;
 	using static Verbose.Utility.VerboseAsserts;
 	using static Verbose.Utility.VerboseTools;
 
 	[TestClass]
-	class AgentTest {
+	public class AgentTest {
 
 		[TestMethod]
-		public void constructor_int_int() {
+		public void Constructor_int_int() {
 
 			// invocation
 			Agent result = new Agent( 3, 5 );
 
 			// assertions
-			StringsAreEqual( "", AsPrettyString( result ) );
+			StringsAreEqual( "name: Peasant\n"+
+					"face: North\n"+
+					"status: Alert\n"+
+					"faction: 0\n"+
+					"", ToYamlString(result) );
+
 			AreEqual( 3, result.Where.X );
 			AreEqual( 5, result.Where.Y );
+		}
 
-			IsNull( result.Type );
-			IsNull( result.Face );
+		[TestMethod]
+		public void Constructor_copy() {
 
+			var src = new Agent( 3, 5 );
+			src.Ident = 5;
+			src.Type = AgentType.GHOST;
+			src.Face = DirEnum.West;
+			src.Status = StatusEnum.Sleep;
+
+			// invocation
+			Agent result = new Agent( src );
+
+			// assertions
+			StringsAreEqual( "name: Ghost\n"+
+					"face: West\n"+
+					"status: Sleep\n"+
+					"faction: 0\n"+
+					"", ToYamlString(result) );
+
+			StringsAreEqual( src.ToDisplay(), result.ToDisplay() );
+
+			AreEqual( 3, result.Where.X );
+			AreEqual( 5, result.Where.Y );
+		}
+
+		[TestMethod]
+		public void Clone() {
+
+			var src = new Agent( 3, 5 );
+			src.Ident = 5;
+			src.Type = AgentType.GHOST;
+			src.Face = DirEnum.West;
+			src.Status = StatusEnum.Sleep;
+
+			// invocation
+			Agent result = (Agent)src.Clone();
+
+			// assertions
+			StringsAreEqual( "name: Ghost\n"+
+					"face: West\n"+
+					"status: Sleep\n"+
+					"faction: 0\n"+
+					"", ToYamlString(result) );
+
+			StringsAreEqual( src.ToDisplay(), result.ToDisplay() );
+
+			AreEqual( 3, result.Where.X );
+			AreEqual( 5, result.Where.Y );
 		}
 
 		[TestMethod]
@@ -43,32 +95,17 @@ namespace Realm.Puzzle {
 
 			// assertions
 			AreNotSame( where, result.Where );
+			StringsAreEqual( "name: Peasant\n"+
+					"face: North\n"+
+					"status: Alert\n"+
+					"faction: 0\n"+
+					"", ToYamlString(result) );
+
 			AreEqual( 3, result.Where.X );
 			AreEqual( 5, result.Where.Y );
-			
-			IsNull( result.Type );
-			IsNull( result.Face );
 
 		}
 
-		[TestMethod]
-		public void constructor_copy() {
-
-			Agent src = new Agent( 3, 5 );
-			src.Type = AgentType.PEASANT;
-			src.Face = DirEnum.NorthEast;
-
-			// invocation
-			Agent result = new Agent( src );
-
-			// assertions
-			AreEqual( 3, result.Where.X );
-			AreEqual( 5, result.Where.Y );
-			
-			AreEqual( AgentType.PEASANT, result.Type );
-			AreEqual( DirEnum.NorthEast, result.Face );
-
-		}
 
 		[TestMethod]
 		public void IsFoe() {
@@ -114,10 +151,10 @@ namespace Realm.Puzzle {
 			var who = new Agent();
 
 			who.Status = StatusEnum.Active;
-			IsTrue( who.IsActive() );
+			IsTrue( who.IsActionReady() );
 
 			who.Status = StatusEnum.Alert;
-			IsFalse( who.IsActive() );
+			IsFalse( who.IsActionReady() );
 		}
 	}
 }

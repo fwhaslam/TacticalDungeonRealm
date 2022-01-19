@@ -17,6 +17,7 @@ namespace Realm.Puzzle {
 	using System.Threading.Tasks;
 
 	using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+	using static Realm.Tools.YamlTools;
 	using static Verbose.Utility.CollectionAsserts;
 	using static Verbose.Utility.GenericCollectionAsserts;
 	using static Verbose.Utility.VerboseAsserts;
@@ -40,6 +41,81 @@ namespace Realm.Puzzle {
 			return map;
 		}
 
+
+//======================================================================================================================
+
+		[TestMethod]
+		public void Constructor() {
+
+			// invocation
+			var result = new PuzzleMap();
+
+			// assertions
+			StringsAreEqual( 
+					"Text: {}\n"+
+					"Map: []\n"+
+					"", ToYamlString(result) );
+		}
+
+		[TestMethod]
+		public void Constructor_copy() {
+
+			var source = Sample();
+
+			// invocation
+			var result = new PuzzleMap( source );
+
+			// assertions
+			StringsAreEqual( "Title: Empty Map\n"+
+					"Image: pic1.png\n"+
+    				"Text:\n"+
+					"  Start: Some Story\n"+
+					"Wide: 5\n"+
+					"Tall: 5\n"+
+					"Agents:\n"+
+					"- name: Peasant\n"+
+					"  face: North\n"+
+					"  status: Alert\n"+
+					"  faction: 0\n"+
+					"Map:\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"- 1.__/1.__/P.__/1L__/1.__\n"+
+					"- 1.__/1.__/1.00/1.__/1.__\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"", ToYamlString(result) );
+		}
+
+		[TestMethod]
+		public void Clone() {
+
+			var source = Sample();
+
+			// invocation
+			var result = source.Clone();
+
+			// assertions
+			StringsAreEqual( "Title: Empty Map\n"+
+					"Image: pic1.png\n"+
+    				"Text:\n"+
+					"  Start: Some Story\n"+
+					"Wide: 5\n"+
+					"Tall: 5\n"+
+					"Agents:\n"+
+					"- name: Peasant\n"+
+					"  face: North\n"+
+					"  status: Alert\n"+
+					"  faction: 0\n"+
+					"Map:\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"- 1.__/1.__/P.__/1L__/1.__\n"+
+					"- 1.__/1.__/1.00/1.__/1.__\n"+
+					"- 1.__/1.__/1.__/1.__/1.__\n"+
+					"", ToYamlString(result) );
+		}
+
+
 		[TestMethod]
 		public void Allocate() {
 			
@@ -56,7 +132,7 @@ namespace Realm.Puzzle {
 			AreEqual( 10, result.Wide );
 			AreEqual( 12, result.Tall );
 
-			IsNull( result.Places[0,0].Agent );
+			AreEqual( -1, result.Places[0,0].AgentId );
 			AreEqual( 0, result.Agents.Count );
 		}
 
@@ -71,7 +147,7 @@ namespace Realm.Puzzle {
 			var result = map.AddAgent( AgentType.GHOST, new Where(0,0), DirEnum.South, FACTION, STATUS );
 
 			// assertions
-			AreEqual( result, map.Places[0,0].Agent );
+			AreEqual( result.Ident, map.Places[0,0].AgentId );
 			Contains( result, map.Agents);
 			AreEqual( 2, map.Agents.Count );
 
@@ -87,7 +163,7 @@ namespace Realm.Puzzle {
 			var result = map.AddAgent( AgentType.GHOST, new Where(0,0), DirEnum.South );
 
 			// assertions
-			AreEqual( result, map.Places[0,0].Agent );
+			AreEqual( result.Ident, map.Places[0,0].AgentId );
 			Contains( result, map.Agents);
 			AreEqual( 2, map.Agents.Count );
 
@@ -105,7 +181,7 @@ namespace Realm.Puzzle {
 
 			// assertions
 			IsEmpty<Agent>( map.Agents );
-			IsNull( map.Places[2,3].Agent );
+			IsNull( map.Places[2,3].AgentId );
 
 		}
 
